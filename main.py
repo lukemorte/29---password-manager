@@ -1,4 +1,5 @@
 import tkinter
+import tkinter.messagebox
 
 SCREEN_WIDTH = 200
 SCREEN_HEIGHT = 200
@@ -6,6 +7,20 @@ SCREEN_HEIGHT = 200
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+
+
+def save():
+    if website_entry.get() == "" or email_entry.get() == "" or password_entry.get() == "":
+        tkinter.messagebox.showinfo("Chyba", "Nejsou vyplněna všechna pole.")
+    else:
+        save_str = f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n"
+        with open("data.txt", "a") as file:
+            file.write(save_str)
+
+        website_entry.delete(0, tkinter.END)
+        email_entry.delete(0, tkinter.END)
+        password_entry.delete(0, tkinter.END)
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -24,12 +39,14 @@ canvas.create_image(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, image=logo_img, anchor=
 # form
 website_label = tkinter.Label(text="Website")
 website_entry = tkinter.Entry(width=35)
+website_entry.focus()
 email_label = tkinter.Label(text="Username / email")
 email_entry = tkinter.Entry(width=35)
+email_entry.insert(0, "docteur@email.cz")
 password_label = tkinter.Label(text="Password")
 password_entry = tkinter.Entry(width=15)
 generate_button = tkinter.Button(text="Generate password", width=15)
-add_button = tkinter.Button(text="Add", width=30)
+add_button = tkinter.Button(text="Add", width=30, command=save)
 
 
 # zobrazení - teprve v ten moment se objekt vykreslí
