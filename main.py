@@ -11,15 +11,23 @@ SCREEN_HEIGHT = 200
 
 def save():
     if website_entry.get() == "" or email_entry.get() == "" or password_entry.get() == "":
-        tkinter.messagebox.showinfo("Chyba", "Nejsou vyplněna všechna pole.")
+        tkinter.messagebox.showerror("Error", "Please, fill in all fields.")
     else:
-        save_str = f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n"
-        with open("data.txt", "a") as file:
-            file.write(save_str)
+        ask_for_save = tkinter.messagebox.askokcancel(title="Confirm", message=
+                                       f"These are the details entered: \nEmail: {email_entry.get()}"
+                                       f"\nPassword: {password_entry.get()} \n\nIs it OK to save?")
 
-        website_entry.delete(0, tkinter.END)
-        email_entry.delete(0, tkinter.END)
-        password_entry.delete(0, tkinter.END)
+        if ask_for_save == True:
+            save_str = f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n"
+            with open("data.txt", "a") as file:
+                file.write(save_str)
+
+            website_entry.delete(0, tkinter.END)
+            password_entry.delete(0, tkinter.END)
+
+            confirm = tkinter.Label(text="Úspěšně jste uložili heslo.", bg="#899d00", fg="white", padx=10, pady=5)
+            confirm.place(x=0, y=0)
+            window.after(1500, confirm.destroy)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
