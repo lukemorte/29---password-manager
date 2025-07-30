@@ -1,10 +1,55 @@
 import tkinter
 import tkinter.messagebox
+import random
 
 SCREEN_WIDTH = 200
 SCREEN_HEIGHT = 200
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
+
+
+def generate_password():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+               'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+               'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+               'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+               'W', 'X', 'Y', 'Z']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+', '-', '.', '/',
+               ':', ';', '<', '=', '>', '?', '@', '[', ']', '^', '_', '{',
+               '|', '}', '~']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+    password = ""
+
+    nr_letters = random.randint(8, 10)
+    nr_symbols = random.randint(2, 4)
+    nr_numbers = random.randint(2, 4)
+
+    all_counts = [nr_letters, nr_symbols, nr_numbers]
+
+    lenpass = nr_letters + nr_symbols + nr_numbers
+
+    for i in range(0, lenpass):
+        arr = []	
+        arr.append(random.choice(letters))
+        arr.append(random.choice(symbols))
+        arr.append(random.choice(numbers))
+
+        arr_types = []
+        if all_counts[0] > 0:
+            arr_types.append(0)
+        if all_counts[1] > 0:
+            arr_types.append(1)
+        if all_counts[2] > 0:
+            arr_types.append(2)
+
+        choice = random.choice(arr_types)
+        all_counts[choice] -= 1
+        password += arr[choice]
+
+    password_entry.delete(0, tkinter.END)
+    password_entry.insert(0, password)
+
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
@@ -33,7 +78,7 @@ def save():
 # ---------------------------- UI SETUP ------------------------------- #
 
 
-#window
+# window
 window = tkinter.Tk()
 window.title("Password Manager")
 window.config(padx=50, pady=50)
@@ -53,7 +98,7 @@ email_entry = tkinter.Entry(width=35)
 email_entry.insert(0, "docteur@email.cz")
 password_label = tkinter.Label(text="Password")
 password_entry = tkinter.Entry(width=15)
-generate_button = tkinter.Button(text="Generate password", width=15)
+generate_button = tkinter.Button(text="Generate password", width=15, command=generate_password)
 add_button = tkinter.Button(text="Add", width=30, command=save)
 
 
