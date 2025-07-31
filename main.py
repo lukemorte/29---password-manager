@@ -1,6 +1,7 @@
 import tkinter
 import tkinter.messagebox
-import random
+import pyperclip
+from random import randint, choice, shuffle
 
 SCREEN_WIDTH = 200
 SCREEN_HEIGHT = 200
@@ -19,36 +20,20 @@ def generate_password():
                '|', '}', '~']
     numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
+    password_list = []
     password = ""
 
-    nr_letters = random.randint(8, 10)
-    nr_symbols = random.randint(2, 4)
-    nr_numbers = random.randint(2, 4)
+    password_list = [choice(letters) for _ in range(randint(5, 10))]
+    password_list += [choice(symbols) for _ in range(randint(2, 7))]
+    password_list += [choice(numbers) for _ in range(randint(4, 8))]
 
-    all_counts = [nr_letters, nr_symbols, nr_numbers]
-
-    lenpass = nr_letters + nr_symbols + nr_numbers
-
-    for i in range(0, lenpass):
-        arr = []	
-        arr.append(random.choice(letters))
-        arr.append(random.choice(symbols))
-        arr.append(random.choice(numbers))
-
-        arr_types = []
-        if all_counts[0] > 0:
-            arr_types.append(0)
-        if all_counts[1] > 0:
-            arr_types.append(1)
-        if all_counts[2] > 0:
-            arr_types.append(2)
-
-        choice = random.choice(arr_types)
-        all_counts[choice] -= 1
-        password += arr[choice]
-
+    shuffle(password_list)
+    password = "".join(password_list)
     password_entry.delete(0, tkinter.END)
     password_entry.insert(0, password)
+
+    pyperclip.copy(password)
+    window.bell()  # Zahraje pípnutí
 
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
