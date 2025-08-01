@@ -2,6 +2,7 @@ import tkinter
 import tkinter.messagebox
 import pyperclip
 from random import randint, choice, shuffle
+import json
 
 SCREEN_WIDTH = 200
 SCREEN_HEIGHT = 200
@@ -40,18 +41,39 @@ def generate_password():
 
 
 def save():
-    if website_entry.get() == "" or email_entry.get() == "" or password_entry.get() == "":
+    website = website_entry.get()
+    email = email_entry.get()
+    password = password_entry.get()
+    new_data = {
+        website: {
+            "email": email,
+            "password": password
+        }
+    }
+
+    if len(website) == 0 or len(email) == 0 or len(password) == 0:
         tkinter.messagebox.showerror("Error", "Please, fill in all fields.")
     else:
-        ask_for_save = tkinter.messagebox.askokcancel(title="Confirm", message=
-                                       f"These are the details entered: \nEmail: {email_entry.get()}"
-                                       f"\nPassword: {password_entry.get()} \n\nIs it OK to save?")
 
-        if ask_for_save == True:
-            save_str = f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n"
-            with open("data.txt", "a") as file:
-                file.write(save_str)
+        try:
+            with open("data.json", "r") as data_file:
+                # load
+                data = json.load(data_file)
 
+        except FileNotFoundError:
+            with open("data.json", "w") as data_file:
+                # save new_data
+                json.dump(new_data, data_file, indent=4)
+
+        else:
+            # update
+            data.update(new_data)
+
+            with open("data.json", "w") as data_file:
+                # save updated data
+                json.dump(data, data_file, indent=4)
+
+        finally:
             website_entry.delete(0, tkinter.END)
             password_entry.delete(0, tkinter.END)
 
@@ -73,11 +95,11 @@ canvas = tkinter.Canvas(width=SCREEN_WIDTH, height=SCREEN_HEIGHT, bg="white", hi
 logo_img = tkinter.PhotoImage(file="logo.png")
 canvas.create_image(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, image=logo_img, anchor="center")
 
-
 # form
 website_label = tkinter.Label(text="Website")
-website_entry = tkinter.Entry(width=35)
+website_entry = tkinter.Entry(width=15)
 website_entry.focus()
+search_button = tkinter.Button(text="Search", width=15)
 email_label = tkinter.Label(text="Username / email")
 email_entry = tkinter.Entry(width=35)
 email_entry.insert(0, "docteur@email.cz")
@@ -86,18 +108,16 @@ password_entry = tkinter.Entry(width=15)
 generate_button = tkinter.Button(text="Generate password", width=15, command=generate_password)
 add_button = tkinter.Button(text="Add", width=30, command=save)
 
-
 # zobrazení - teprve v ten moment se objekt vykreslí
 canvas.grid(column=1, row=0, pady=(0, 20), columnspan=2)
 website_label.grid(column=0, row=1, sticky="E", padx=5, pady=5)
 website_entry.grid(column=1, row=1, columnspan=2, sticky="EW", padx=5, pady=5, ipadx=50, ipady=3)
+search_button.grid(column=2, row=1, sticky="EW", padx=5, pady=5)
 email_label.grid(column=0, row=2, sticky="E", padx=5, pady=5)
 email_entry.grid(column=1, row=2, columnspan=2, sticky="EW", padx=5, pady=5, ipady=3)
 password_label.grid(column=0, row=3, sticky="E", padx=5, pady=5)
 password_entry.grid(column=1, row=3, sticky="EW", padx=5, pady=5, ipady=3)
 generate_button.grid(column=2, row=3, sticky="EW", padx=5, pady=5)
 add_button.grid(column=1, row=4, columnspan=2, sticky="EW", padx=5, pady=5)
-
-
 
 window.mainloop()
