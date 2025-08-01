@@ -82,6 +82,28 @@ def save():
             window.after(1500, confirm.destroy)
 
 
+# ---------------------------- SEARCH ------------------------------- #        
+
+
+def find_password():
+    find_text = website_entry.get()
+
+    try:
+        with open("data.json") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        tkinter.messagebox.showinfo("Error", "JSON File not found.")
+    else:
+        try:
+            # Přístup ke konkrétnímu klíči v JSON slovníku, např. "amazon"            
+            msg = f"{find_text}:\n{data[find_text]["email"]}\n{data[find_text]["password"]}"
+            info = "\n\n(password waas coppied to clipboard)"
+            msg = msg + info
+            pyperclip.copy(data[find_text]["password"])
+            tkinter.messagebox.showinfo("Your user data", msg)
+        except KeyError:
+            tkinter.messagebox.showerror("Error", "Website record not found.")
+
 # ---------------------------- UI SETUP ------------------------------- #
 
 
@@ -99,7 +121,7 @@ canvas.create_image(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, image=logo_img, anchor=
 website_label = tkinter.Label(text="Website")
 website_entry = tkinter.Entry(width=15)
 website_entry.focus()
-search_button = tkinter.Button(text="Search", width=15)
+search_button = tkinter.Button(text="Search", width=15, command=find_password)
 email_label = tkinter.Label(text="Username / email")
 email_entry = tkinter.Entry(width=35)
 email_entry.insert(0, "docteur@email.cz")
