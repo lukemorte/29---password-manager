@@ -86,7 +86,7 @@ def save():
 
 
 def find_password():
-    find_text = website_entry.get()
+    website = website_entry.get()
 
     try:
         with open("data.json") as data_file:
@@ -94,15 +94,16 @@ def find_password():
     except FileNotFoundError:
         tkinter.messagebox.showinfo("Error", "JSON File not found.")
     else:
-        try:
-            # Přístup ke konkrétnímu klíči v JSON slovníku, např. "amazon"            
-            msg = f"{find_text}:\n{data[find_text]["email"]}\n{data[find_text]["password"]}"
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            msg = f"username: {data[website]["email"]}\npassword: {data[website]["password"]}"
             info = "\n\n(password waas coppied to clipboard)"
-            msg = msg + info
-            pyperclip.copy(data[find_text]["password"])
-            tkinter.messagebox.showinfo("Your user data", msg)
-        except KeyError:
-            tkinter.messagebox.showerror("Error", "Website record not found.")
+            msg += info
+            pyperclip.copy(data[website]["password"])
+            tkinter.messagebox.showinfo(website, msg)
+        else:
+            tkinter.messagebox.showerror("Error", f"{website} is not in records.")
 
 # ---------------------------- UI SETUP ------------------------------- #
 
