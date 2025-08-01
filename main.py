@@ -111,7 +111,7 @@ add_button = tkinter.Button(text="Add", width=30, command=save)
 # zobrazení - teprve v ten moment se objekt vykreslí
 canvas.grid(column=1, row=0, pady=(0, 20), columnspan=2)
 website_label.grid(column=0, row=1, sticky="E", padx=5, pady=5)
-website_entry.grid(column=1, row=1, columnspan=2, sticky="EW", padx=5, pady=5, ipadx=50, ipady=3)
+website_entry.grid(column=1, row=1, sticky="EW", padx=5, pady=5, ipadx=50, ipady=3)
 search_button.grid(column=2, row=1, sticky="EW", padx=5, pady=5)
 email_label.grid(column=0, row=2, sticky="E", padx=5, pady=5)
 email_entry.grid(column=1, row=2, columnspan=2, sticky="EW", padx=5, pady=5, ipady=3)
